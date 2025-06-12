@@ -1,22 +1,24 @@
 <?php
 require_once './lib/SimplePie.php';
 
-$allowed_origins = ['https://tabn.hrushispace.com', 'http://localhost:5173', 'http://192.168.29.207:5173'];
+$allowed_origins = ['https://tabn.hrushispace.com', 'http://localhost:5173', 'http://localhost:4173'];
 $rate_limit_count = 50;
 $rate_limit_minutes = 1;
 $storage_file = __DIR__. '/rss_proxy_rate_limit.json';
 $method_cache_file = __DIR__. '/rss_method_cache.json';
 
-$origin = $_SERVER['HTTP_ORIGIN'] ?? '';
-if (!in_array($origin, $allowed_origins)) {
-    http_response_code(403);
-    echo json_encode(['status' => 'error', 'error' => 'Origin not allowed']);
-    exit;
+if (isset($_SERVER['HTTP_ORIGIN']) && in_array($_SERVER['HTTP_ORIGIN'], $allowed_origins)) {
+    header('Access-Control-Allow-Origin: ' . $_SERVER['HTTP_ORIGIN']);
+    header('Access-Control-Allow-Methods: GET, OPTIONS');
+    header('Access-Control-Allow-Headers: Content-Type');
+    header('Content-Type: application/json');
 }
-header("Access-Control-Allow-Origin: $origin");
-header('Content-Type: application/json');
 
-// Rate limiting logic (unchanged)
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(204);
+    exit();
+}
+
 $ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
 $rate_data = file_exists($storage_file) ? json_decode(file_get_contents($storage_file), true) : [];
 

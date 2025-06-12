@@ -91,7 +91,7 @@ self.onmessage = async (event) => {
       now - lastFetch >= refreshIntervalMs
     ) {
       try {
-        const response = await fetch(proxyServer + item.url);
+        const response = await fetch(proxyServer + item.url , { mode: "cors" });
         const json = await response.json();
         const newItems = [];
         for (const entry of json?.items || []) {
