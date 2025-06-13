@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { storage } from "@/storage/main";
 import type { NewsItem, SavedPost, SourceItem } from "@/storage/types";
+import type { Sample_Source } from "@/types/general";
 
 export function useResourceFetcher(
   selectedInterval?: string,
@@ -11,6 +12,7 @@ export function useResourceFetcher(
   const [sources, setSources] = useState<SourceItem[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [samepleSource, setSampleSource] = useState<Sample_Source[]>([]);
 
   const fetchAllSources = async () => {
      try {
@@ -38,6 +40,20 @@ export function useResourceFetcher(
     }
   };
 
+  const fetchSamplesSources = async () => {
+    try {
+      setIsLoading(true);
+      const res = await fetch("https://api.tabn.hrushispace.com/sample_rss_sources");
+      const result = await res.json();
+      setSampleSource(result.body.resources as Sample_Source[]);
+    } catch (err) {
+      console.error("Error fetching sources", err);
+      setError("Source fetch failed");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  
   const fetchFeedsBySource = async (id: string) => {
     try {
       setIsLoading(true);
@@ -84,6 +100,7 @@ export function useResourceFetcher(
     rssItems,
     sources,
     savedPosts,
+    samepleSource,
     setRssItems,
     setSources,
     setSavedPosts,
@@ -92,6 +109,7 @@ export function useResourceFetcher(
     fetchAllSources,
     fetchFeedsBySource,
     fetchSavedFeeds,
+    fetchSamplesSources,
     isLoading,
     error,
   };

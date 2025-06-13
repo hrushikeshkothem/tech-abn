@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import {
   Dialog,
@@ -22,6 +22,7 @@ import useCustomSound from "@/hooks/useCustomSound";
 import { storage } from "@/storage/main";
 import { serverConfigSchema } from "@/utils/formSchemes";
 import { useToast } from "@/hooks/useToast";
+import { useResourceFetcher } from "@/hooks/useResourceFetcher";
 
 const NewUserSetupDialog = ({
   isOpen,
@@ -52,7 +53,11 @@ const NewUserSetupDialog = ({
   const { setTheme } = useTheme();
   const { toast } = useToast();
   const [play] = useCustomSound();
+  const {samepleSource, fetchSamplesSources  } = useResourceFetcher()
 
+  useEffect(() => {
+    fetchSamplesSources()
+  }, [])
   const handleSourceToggle = (sourceId: string) => {
     play({ id: "hover" });
     setSelectedSources((prev) =>
@@ -171,6 +176,7 @@ const NewUserSetupDialog = ({
             CurrentIcon={CurrentIcon}
             handleSourceToggle={handleSourceToggle}
             selectedSources={selectedSources}
+            sampleSources={samepleSource}
           />
         );
       case 1:

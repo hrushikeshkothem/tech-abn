@@ -18,21 +18,21 @@ export default function RootLayout() {
     const { server, retention, relaxation } =
       await storage.getAdvancedOptions();
     enqueueJob({
-      workerKey: "syncOnOpen",
-      titlePending: "Syncing Data",
-      titleFinished: "Sync Finished",
-      extraParams: {
-        proxyServer: server,
-        relaxation: relaxation, 
-        refresh: false
-      },
-    });
-    enqueueJob({
       workerKey: "cleanUpSync",
       titlePending: "CleanUp Data",
       titleFinished: "CleanUp Finished",
       extraParams: {
         retention: retention,
+      },
+    });
+    enqueueJob({
+      workerKey: "syncOnOpen",
+      titlePending: "Syncing Data",
+      titleFinished: "Sync Finished",
+      extraParams: {
+        proxyServer: server,
+        relaxation: relaxation,
+        refresh: false,
       },
     });
   };

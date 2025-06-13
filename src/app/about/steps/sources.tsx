@@ -2,7 +2,6 @@ import { motion } from "framer-motion";
 import {
   containerVariants,
   itemVariants,
-  SAMPLE_RSS_SOURCES,
   setupSteps,
 } from "../aboutUtils";
 import { Card } from "@/components/ui/card";
@@ -10,15 +9,18 @@ import { Check } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import StepInfo from "./components/stepInfo";
+import type { Sample_Source } from "@/types/general";
 
 const StepOne = ({
   CurrentIcon,
   selectedSources,
   handleSourceToggle,
+  sampleSources
 }: {
   CurrentIcon: any;
   selectedSources: any;
   handleSourceToggle: any;
+  sampleSources: Sample_Source[]
 }) => {
   return (
     <motion.div
@@ -37,7 +39,7 @@ const StepOne = ({
         variants={itemVariants}
         className="grid grid-cols-1 md:grid-cols-2 gap-4 pr-2"
       >
-        {SAMPLE_RSS_SOURCES.map((source) => (
+        {sampleSources.map((source) => (
           <motion.div key={source.id}>
             <Card
               onClick={() => handleSourceToggle(source.id)}
@@ -55,7 +57,7 @@ const StepOne = ({
               <div className="flex items-start space-x-4">
                 <div className="text-3xl drop-shadow-sm">
                   <img
-                    src={source.bannerUrl}
+                    src={source.banner_url}
                     className="h-8 w-8 rounded-full object-cover"
                   />
                 </div>

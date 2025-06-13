@@ -26,34 +26,54 @@ const WorkerManager = ({
   const [isComplete, setIsComplete] = useState(false);
   const [title, setTitle] = useState("");
   const [play] = useCustomSound();
+
+  const processingRef = useRef(false);
+
   const processNextJob = () => {
+    if (processingRef.current) {
+      console.log("Already processing a job, skipping...");
+      return;
+    }
+
     const job = peekJob();
+    console.log("Processing job:", job);
+
     if (!job) {
+      processingRef.current = false;
       setSyncing(false);
       return;
     }
+
+    processingRef.current = true;
+    setSyncing(true);
+
     const workerProvider = job.worker;
     WorkerRef.current = workerProvider.init();
     const handler = WorkerRef.current;
-    if (!handler) return;
-    setSyncing(true);
+
+    if (!handler) {
+      processingRef.current = false;
+      return;
+    }
+
     setIsComplete(false);
     setTitle(job.job.titlePending);
     setProgress(0);
+
     handler.onmessage = (event) => {
       const data = event.data;
       const { percent, statusText, isComplete } =
         workerProvider.progressHandler(data);
       setProgress(percent);
       setStatusText(statusText);
+
       if (isComplete) {
-        setIsComplete(true);
         setTitle(job.job.titleFinished);
         play({ id: "hover" });
+        setIsComplete(true);
         if (onCompleteHandle !== undefined) onCompleteHandle();
+
         setTimeout(() => {
-          setSyncing(false);
-          dequeueJob();
           const refreshCheck =
             job.job.extraParams.refresh === undefined
               ? true
@@ -61,29 +81,42 @@ const WorkerManager = ({
           if (
             job.job.workerKey === "dataImporter" ||
             (job.job.workerKey === "syncOnOpen" && refreshCheck)
-          ) {
+          ) { 
             window.location.reload();
           }
-          processNextJob();
-        }, 1000);
+          dequeueJob();
+          processingRef.current = false;
+          if (!isQueueEmpty()) {
+            processNextJob();
+          } else {
+            setSyncing(false);
+          }
+        }, 2000);
       }
     };
+
     workerProvider.run({ workHandler: handler, ...job.job.extraParams });
   };
 
   useEffect(() => {
-    setQueueUpdateCallback(() => {
-      if (!syncing && !isQueueEmpty()) {
+    const queueCallback = () => {
+      console.log("Queue updated, checking for jobs...");
+      if (!processingRef.current && !isQueueEmpty()) {
         processNextJob();
       }
-    });
-    if (!syncing && !isQueueEmpty()) {
+    };
+
+    setQueueUpdateCallback(queueCallback);
+    if (!processingRef.current && !isQueueEmpty()) {
       processNextJob();
     }
+
     return () => {
       if (WorkerRef.current) {
         WorkerRef.current.onmessage = null;
+        WorkerRef.current.terminate?.();
       }
+      processingRef.current = false;
     };
   }, []);
 

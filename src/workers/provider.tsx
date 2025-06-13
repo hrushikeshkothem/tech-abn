@@ -23,8 +23,11 @@ export const getSyncOnOpenWorker: WorkerProvider = {
       sources,
       completedStages,
       skipCheck: skipCheck != undefined ? skipCheck : false,
-      proxyServer: proxyServer == undefined ? "https://rss.tabn.hrushispace.com/?url=" : proxyServer,
-      relaxation: relaxation == undefined ? 1000 : relaxation*1000
+      proxyServer:
+        proxyServer == undefined
+          ? "https://rss.tabn.hrushispace.com/?url="
+          : proxyServer,
+      relaxation: relaxation == undefined ? 1000 : relaxation * 1000,
     };
     workHandler.postMessage(data);
     return true;
@@ -101,24 +104,24 @@ export const getCleanUpSyncWorker: WorkerProvider = {
   async run({ workHandler, retention, hardClean }) {
     const data = {
       start: true,
-      retention: retention === undefined ? 30 :  retention,
-      hardClean: hardClean == undefined ? false : true
+      retention: retention === undefined ? 30 : retention,
+      hardClean: hardClean == undefined ? false : true,
     };
     workHandler.postMessage(data);
     return true;
   },
   progressHandler(data) {
-    if (data?.statusShipper) {
-      const percent = data.status.percentage;
-      const statusText = data.status.message;
-      const isComplete = false;
-      sessionStorage.setItem("SyncStatus", `${data.status.stage}`);
-      return { percent, statusText, isComplete };
-    } else if (data?.done) {
+    if (data?.done) {
       const percent = 100;
       const statusText = data.message;
       const isComplete = true;
       sessionStorage.removeItem("SyncStatus");
+      return { percent, statusText, isComplete };
+    } else {
+      const percent = 0;
+      const statusText = data.status.message;
+      const isComplete = false;
+      sessionStorage.setItem("SyncStatus", `${data.status.stage}`);
       return { percent, statusText, isComplete };
     }
   },
