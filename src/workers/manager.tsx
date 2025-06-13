@@ -74,17 +74,17 @@ const WorkerManager = ({
         if (onCompleteHandle !== undefined) onCompleteHandle();
 
         setTimeout(() => {
+          dequeueJob();
           const refreshCheck =
-            job.job.extraParams.refresh === undefined
+            job.job.extraParams?.refresh === undefined
               ? true
               : job.job.extraParams.refresh;
           if (
             job.job.workerKey === "dataImporter" ||
             (job.job.workerKey === "syncOnOpen" && refreshCheck)
-          ) { 
+          ) {
             window.location.reload();
           }
-          dequeueJob();
           processingRef.current = false;
           if (!isQueueEmpty()) {
             processNextJob();
