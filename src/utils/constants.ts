@@ -8,10 +8,10 @@ export const VISIBLE_CARD_COUNT = 5;
 
 export const INTERVALOPTIONS = [
   { label: "Today", value: "1d" },
-  { label: "Last 2 days", value: "2d" },
-  { label: "This week", value: "7d" },
-  { label: "Last 30 days", value: "30d" },
-  { label: "Last year", value: "365d" },
+  { label: "Past 2 Days", value: "2d" },
+  { label: "This Week (7 Days)", value: "7d" },
+  { label: "Past 30 Days", value: "30d" },
+  { label: "Past Year", value: "365d" },
 ];
 
 export const REFRESH_INTERVALS = [

@@ -30,7 +30,7 @@ function SourceDescription() {
       </h2>
 
       <p className="text-gray-700 dark:text-gray-300">
-        Enter the <strong>Source title</strong>, <strong>RSS feed URL</strong>,
+        Provide a <strong>Source title</strong>, <strong>RSS feed URL</strong>,
         and an optional <strong>banner image</strong> to personalize your
         source.
       </p>
@@ -44,6 +44,12 @@ function SourceDescription() {
       <p className="text-gray-700 dark:text-gray-300">
         📬 This means you get the latest posts delivered directly to your feed,
         without needing to visit each site manually.
+      </p>
+
+      <p className="text-green-600 dark:text-green-400 font-medium">
+        ✅ <strong>Not limited to RSS:</strong> As long as your proxy server
+        returns data in the expected format, TABN will handle it just fine —
+        whether it's Atom, JSON, or custom scraped content.
       </p>
 
       <p className="text-blue-600 dark:text-blue-400">
@@ -122,8 +128,7 @@ function SyncOnOpenDescription() {
       </ul>
 
       <p className="text-green-600 dark:text-green-400 font-medium">
-        ✅ Once done, your feed is up to date — with zero background jobs or
-        extra permissions.
+        ✅ Once done, your feed is up to date — without extra permissions.
       </p>
     </div>
   );
@@ -138,9 +143,9 @@ function CleanupSyncDescription() {
       </h2>
 
       <p className="text-gray-700 dark:text-gray-300">
-        Tabn follows a <strong>local-first approach</strong> — no cloud
-        databases or expensive servers. All your feed data is stored in your
-        browser’s{" "}
+        Tabn follows a <strong>local-first/client-first approach</strong> — no
+        cloud databases or expensive servers. All your feed data is stored in
+        your browser’s{" "}
         <code className="bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded text-sm">
           localStorage & IndexedDB
         </code>
@@ -148,14 +153,14 @@ function CleanupSyncDescription() {
       </p>
 
       <p className="text-gray-700 dark:text-gray-300">
-        But since it has limited space, we've built a
-        smart retention system called <strong>CleanupSync</strong> 🧼.
+        But since it has limited space, we've built a smart retention system
+        called <strong>CleanupSync</strong> 🧼.
       </p>
 
       <ul className="list-disc list-inside text-gray-700 dark:text-gray-300 space-y-1">
         <li>
-          📆 Feeds older than <strong>21 days</strong> are automatically
-          flushed.
+          📆 Feeds older than <strong>retention period</strong> are
+          automatically flushed.
         </li>
       </ul>
 
@@ -219,7 +224,7 @@ export const whyDifferent = [
   {
     Icon: <Settings2 className="h-10 w-10 text-primary" />,
     title: "Minimal Permissions",
-    description: "No aggressive background access needed.",
+    description: "No intrusive background access required.",
   },
   {
     Icon: <CircleCheckBig className="h-10 w-10 text-primary" />,

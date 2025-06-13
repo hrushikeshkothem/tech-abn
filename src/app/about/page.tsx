@@ -63,15 +63,15 @@ export default function About() {
             src="./bg1.jpg"
             alt="Your Personal Tech Feed"
             title="Your Personal Tech Feed"
-            description="Build your own feed from your favorite sources and bring all your updates together in one place."
+            description="Build your own feed from your favorite sources and bring all your updates together — in one place."
           />
         </div>
         <div className="col-span-1 row-span-1">
           <DescriptiveItem
             src="./bg2.jpg"
             alt="RSS Management"
-            title="RSS"
-            description="Manage your RSS sources"
+            title="Information"
+            description="Take charge of what you read, from where, and when."
           />
         </div>
         <div className="col-span-1 row-span-1">
@@ -79,7 +79,7 @@ export default function About() {
             src="./bg3.jpg"
             alt="Swipe News UI"
             title="Swipe UI"
-            description="Interactive and simple Swipe interface"
+            description="Navigate with ease using our clean, swipe-friendly interface."
           />
         </div>
         <div className="col-span-1 row-span-1">
@@ -87,18 +87,18 @@ export default function About() {
             src="./bg4.jpg"
             alt="Custom Refresh"
             title="Auto Refresh"
-            description="Light-weight client side auto refresh"
+            description="Smart client-side updates without slowing you down."
           />
         </div>
       </div>
       <SectionHeader
-        title="Why another RSS aggreator ?"
-        description="Simple, lightweight, and crafted for you."
+        title="Another RSS reader?"
+        description="Simple, lightweight, and crafted for you — your feed, your rules."
       />
       <FeatureGridInteractive items={whyDifferent} />
       <SectionHeader
         title="How TABN Works ?"
-        description="From adding sources to fetching fresh updates all at one place."
+        description="Add. Configure. Sync. Clean-up."
         className="!mt-8"
       />
       <HowItWorksSmooth />

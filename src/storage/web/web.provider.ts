@@ -83,6 +83,13 @@ export const webStorageProvider: StorageProvider = {
 
   async addSource(source) {
     const db = await openDB();
+    const existingSources = await this.getAllSources()
+    for(const currSource of existingSources){
+      if(currSource.url === source.url){
+        db.close();
+        return;
+      }
+    }
     const tx = db.transaction("sources", "readwrite");
     source.active = true;
     tx.objectStore("sources").put(source);
