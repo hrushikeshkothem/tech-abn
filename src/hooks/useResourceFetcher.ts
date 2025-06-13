@@ -12,6 +12,19 @@ export function useResourceFetcher(
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const fetchAllSources = async () => {
+     try {
+      setIsLoading(true);
+      const result = await storage.getAllSources();
+      setSources(result);
+    } catch (err) {
+      console.error("Error fetching sources", err);
+      setError("Source fetch failed");
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
   const fetchSources = async () => {
     try {
       setIsLoading(true);
@@ -76,6 +89,7 @@ export function useResourceFetcher(
     setSavedPosts,
     fetchFeeds,
     fetchSources,
+    fetchAllSources,
     fetchFeedsBySource,
     fetchSavedFeeds,
     isLoading,

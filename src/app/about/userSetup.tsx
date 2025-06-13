@@ -42,7 +42,7 @@ const NewUserSetupDialog = ({
   >("system");
   const [feedbackAudio, setFeedbackAudio] = useState(true);
   const [advancedOptions, setAdvancedOptions] = useState({
-    proxyServer: "https://rss.tabn.hrushispace.com/url=",
+    proxyServer: "https://rss.tabn.hrushispace.com/?url=",
     retentionPeriod: "30",
     relaxationTime: "1",
   });

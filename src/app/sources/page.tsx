@@ -7,10 +7,10 @@ import Loading from "./loading";
 import GlobalError from "../globalError";
 
 export default function Sources() {
-  const { sources, fetchSources, isLoading, error } = useResourceFetcher();
+  const { sources, fetchAllSources, isLoading, error } = useResourceFetcher();
 
   useEffect(() => {
-    fetchSources();
+    fetchAllSources();
   }, []);
 
   if (isLoading) return <Loading />;

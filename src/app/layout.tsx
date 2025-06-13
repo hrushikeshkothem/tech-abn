@@ -23,7 +23,8 @@ export default function RootLayout() {
       titleFinished: "Sync Finished",
       extraParams: {
         proxyServer: server,
-        relaxation: relaxation,
+        relaxation: relaxation, 
+        refresh: false
       },
     });
     enqueueJob({

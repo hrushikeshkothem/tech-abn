@@ -52,7 +52,7 @@ const PreferencesPage = () => {
       setPreferences({
         theme,
         feedbackAudio: audio,
-        proxyServer: advanced.server || "",
+        proxyServer: advanced.server || "https://rss.tabn.hrushispace.com/?url=",
         retentionPeriod: advanced.retention || "30",
         relaxationTime: advanced.relaxation || "1",
       });

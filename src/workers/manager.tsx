@@ -54,9 +54,13 @@ const WorkerManager = ({
         setTimeout(() => {
           setSyncing(false);
           dequeueJob();
+          const refreshCheck =
+            job.job.extraParams.refresh === undefined
+              ? true
+              : job.job.extraParams.refresh;
           if (
             job.job.workerKey === "dataImporter" ||
-            job.job.workerKey === "syncOnOpen"
+            (job.job.workerKey === "syncOnOpen" && refreshCheck)
           ) {
             window.location.reload();
           }
