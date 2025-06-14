@@ -87,7 +87,7 @@ self.onmessage = async (e) => {
         const cursor = e.target.result;
         if (cursor) {
           const source = cursor.value;
-          source.lastSyncTime = now;
+          source.last_fetch_time = now;
           cursor.update(source);
           cursor.continue();
         } else {
