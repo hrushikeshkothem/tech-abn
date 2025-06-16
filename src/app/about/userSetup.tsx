@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Upload, Zap } from "lucide-react";
-import { SAMPLE_RSS_SOURCES, setupSteps } from "./aboutUtils";
+import { setupSteps } from "./aboutUtils";
 import StepOne from "./steps/sources";
 import StepTwo from "./steps/theme";
 import StepThree from "./steps/sonic";
@@ -89,7 +89,7 @@ const NewUserSetupDialog = ({
         return;
       }
       const setupData = {
-        sources: SAMPLE_RSS_SOURCES.filter((source) =>
+        sources: samepleSource.filter((source) =>
           selectedSources.includes(source.id)
         ),
         theme: selectedTheme,
@@ -103,7 +103,7 @@ const NewUserSetupDialog = ({
           url: source.url,
           gradient: `bg-gradient-to-br ${source.color}`,
           createdAt: new Date().toISOString(),
-          bannerUrl: source.bannerUrl,
+          bannerUrl: source.banner_url,
           refreshInterval: 24,
         });
       }

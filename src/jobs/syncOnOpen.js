@@ -91,19 +91,20 @@ self.onmessage = async (event) => {
       now - lastFetch >= refreshIntervalMs
     ) {
       try {
-        const response = await fetch(proxyServer + item.url , { mode: "cors" });
+        const response = await fetch(proxyServer + item.url, { mode: "cors" });
         const json = await response.json();
         const newItems = [];
         for (const entry of json?.items || []) {
-          const pubDate = new Date(entry.pubDate).getTime();
-          if (!lastFetch || pubDate > lastFetch) {
-            entry.sourceId = item.id;
-            newItems.push(entry);
+          entry.sourceId = item.id;
+          if(entry.pubDate == ""){
+            const now = new Date();
+            entry.pubDate = now.toISOString().replace('T', ' ').split('.')[0];
           }
-        }
+          newItems.push(entry);
+        } 
         if (newItems.length > 0) {
           await addFeeds(newItems);
-        }
+        } 
         await updateSourceFetchTime(item.id, now);
         self.postMessage({
           key: item.id,
@@ -144,7 +145,9 @@ self.onmessage = async (event) => {
         percentage: Math.round(((i + 1) / dataArray.length) * 100),
       },
     });
-    await delay(relaxation);
+    if(result.skipped !== true){
+      await delay(relaxation); 
+    }
     i++;
   }
 

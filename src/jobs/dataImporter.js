@@ -80,14 +80,13 @@ self.onmessage = async (e) => {
   const addLastSyncTimeToSources = async (db) => {
     const tx = db.transaction("sources", "readwrite");
     const store = tx.objectStore("sources");
-    const now = Date.now();
     const req = store.openCursor();
     return new Promise((resolve, reject) => {
       req.onsuccess = (e) => {
         const cursor = e.target.result;
         if (cursor) {
           const source = cursor.value;
-          source.last_fetch_time = now;
+          source.last_fetch_time = null;
           cursor.update(source);
           cursor.continue();
         } else {

@@ -4,8 +4,9 @@ require_once './lib/SimplePie.php';
 $allowed_origins = ['https://tabn.hrushispace.com', 'http://localhost:5173', 'http://localhost:4173'];
 $rate_limit_count = 50;
 $rate_limit_minutes = 1;
-$storage_file = __DIR__. '/rss_proxy_rate_limit.json';
-$method_cache_file = __DIR__. '/rss_method_cache.json';
+$storage_file = __DIR__ . '/rss_proxy_rate_limit.json';
+$method_cache_file = __DIR__ . '/rss_method_cache.json';
+
 
 if (isset($_SERVER['HTTP_ORIGIN']) && in_array($_SERVER['HTTP_ORIGIN'], $allowed_origins)) {
     header('Access-Control-Allow-Origin: ' . $_SERVER['HTTP_ORIGIN']);
@@ -25,7 +26,9 @@ $rate_data = file_exists($storage_file) ? json_decode(file_get_contents($storage
 if (!isset($rate_data[$ip])) {
     $rate_data[$ip] = [];
 }
+
 $rate_data[$ip] = array_filter($rate_data[$ip], fn($ts) => $ts > time() - $rate_limit_minutes * 60);
+
 if (count($rate_data[$ip]) >= $rate_limit_count) {
     http_response_code(429);
     echo json_encode(['status' => 'error', 'error' => 'Rate limit exceeded']);
@@ -48,7 +51,8 @@ if (!filter_var($rss_url, FILTER_VALIDATE_URL)) {
 }
 
 // Method cache management
-function loadMethodCache() {
+function loadMethodCache()
+{
     global $method_cache_file;
     if (!file_exists($method_cache_file)) {
         return [];
@@ -57,41 +61,42 @@ function loadMethodCache() {
     return is_array($cache) ? $cache : [];
 }
 
-function saveMethodCache($cache) {
+function saveMethodCache($cache)
+{
     global $method_cache_file;
     file_put_contents($method_cache_file, json_encode($cache, JSON_PRETTY_PRINT));
 }
 
-function getCacheKey($url) {
+function getCacheKey($url)
+{
     $parsed = parse_url($url);
     return ($parsed['host'] ?? '') . ($parsed['path'] ?? '');
 }
 
-
-
-function tryFeedParsing($rss_url, $attempt = 1) {
+function tryFeedParsing($rss_url, $attempt = 1)
+{
     $feed = new SimplePie();
     $feed->set_feed_url($rss_url);
     $feed->set_timeout(30);
     $feed->enable_cache(false);
     $feed->force_feed(true);
-    
+
     // Different configuration attempts
     switch ($attempt) {
         case 1:
             // Minimal configuration - works for many feeds including Uber
             break;
-            
+
         case 2:
             // Basic user agent only
             $feed->set_useragent('Mozilla/5.0 (compatible; RSS Reader)');
             break;
-            
+
         case 3:
             // Standard browser user agent
             $feed->set_useragent('Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:126.0) Gecko/20100101 Firefox/126.0');
             break;
-            
+
         case 4:
             // Full browser simulation (for picky feeds) - but without problematic options
             $feed->set_useragent('Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:126.0) Gecko/20100101 Firefox/126.0');
@@ -102,12 +107,12 @@ function tryFeedParsing($rss_url, $attempt = 1) {
                     'Connection: keep-alive',
                     'Referer: https://www.hrushispace.com/',
                 ],
-                CURLOPT_FOLLOWLOCATION => true, 
+                CURLOPT_FOLLOWLOCATION => true,
                 CURLOPT_SSL_VERIFYPEER => true,
                 CURLOPT_SSL_VERIFYHOST => 2,
             ]);
             break;
-            
+
         case 5:
             // Full configuration with all headers (last resort)
             $feed->set_useragent('Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:126.0) Gecko/20100101 Firefox/126.0');
@@ -126,9 +131,74 @@ function tryFeedParsing($rss_url, $attempt = 1) {
             ]);
             break;
     }
-    
+
     $feed->init();
     return $feed;
+}
+
+function fetchPreviewImage($url)
+{
+    $ch = curl_init($url);
+    curl_setopt_array($ch, [
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_MAXREDIRS => 5,
+        CURLOPT_USERAGENT => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
+        CURLOPT_TIMEOUT => 10,
+        CURLOPT_SSL_VERIFYPEER => false,
+        CURLOPT_SSL_VERIFYHOST => false,
+        CURLOPT_HEADER => false,
+        CURLOPT_RANGE => '0-8192',
+    ]);
+
+    $html = curl_exec($ch);
+
+    curl_close($ch);
+
+    if (!$html) return null;
+
+    $headEnd = stripos($html, '</head>');
+    $headHtml = $headEnd !== false ? substr($html, 0, $headEnd + 7) : $html;
+
+    libxml_use_internal_errors(true);
+    $doc = new DOMDocument();
+    $doc->loadHTML($headHtml);
+
+    $metaTags = $doc->getElementsByTagName('meta');
+
+    $candidates = [
+        'og:image',
+        'og:preview',
+        'twitter:image',
+        'image',
+    ];
+
+    foreach ($metaTags as $tag) {
+        if ($tag->hasAttribute('property')) {
+            $prop = strtolower($tag->getAttribute('property'));
+            if (in_array($prop, $candidates) && $tag->hasAttribute('content')) {
+                return $tag->getAttribute('content');
+            }
+        }
+        if ($tag->hasAttribute('name')) {
+            $name = strtolower($tag->getAttribute('name'));
+            if (in_array($name, $candidates) && $tag->hasAttribute('content')) {
+                return $tag->getAttribute('content');
+            }
+        }
+    }
+
+    return null;
+}
+
+function cleanText($text)
+{
+    return $text ? trim(html_entity_decode($text, ENT_QUOTES | ENT_HTML5, 'UTF-8')) : '';
+}
+
+function formatDate($timestamp)
+{
+    return $timestamp ? date('Y-m-d H:i:s', $timestamp) : '';
 }
 
 $method_cache = loadMethodCache();
@@ -167,15 +237,17 @@ if (!$used_cache || $cache_fallback) {
                 'method' => $attempt,
                 'timestamp' => time(),
                 'success_count' => ($method_cache[$cache_key]['success_count'] ?? 0) + 1,
-                'url_sample' => $rss_url 
+                'url_sample' => $rss_url
             ];
             saveMethodCache($method_cache);
             break;
         }
         $last_error = $feed->error();
-        if (strpos($last_error, '404') !== false || 
+        if (
+            strpos($last_error, '404') !== false ||
             strpos($last_error, '403') !== false ||
-            strpos($last_error, 'DNS') !== false) {
+            strpos($last_error, 'DNS') !== false
+        ) {
             break;
         }
     }
@@ -184,7 +256,7 @@ if (!$used_cache || $cache_fallback) {
 if ($feed->error()) {
     http_response_code(500);
     echo json_encode([
-        'status' => 'error', 
+        'status' => 'error',
         'error' => 'Failed to parse feed: ' . $last_error,
         'attempts_made' => $attempt ?? 0,
         'url' => $rss_url,
@@ -195,14 +267,6 @@ if ($feed->error()) {
         ]
     ]);
     exit;
-}
-
-function cleanText($text) {
-    return $text ? trim(html_entity_decode($text, ENT_QUOTES | ENT_HTML5, 'UTF-8')) : '';
-}
-
-function formatDate($timestamp) {
-    return $timestamp ? date('Y-m-d H:i:s', $timestamp) : '';
 }
 
 $normalized = [
@@ -246,10 +310,18 @@ foreach ($items as $item) {
             'length' => cleanText($enc->get_length())
         ];
     }
-    $thumbnail = '';
+
+    $thumbnail = "";
     if ($item->get_enclosure() && $item->get_enclosure()->get_thumbnail()) {
         $thumbnail = cleanText($item->get_enclosure()->get_thumbnail());
     }
+    if (empty($thumbnail)) {
+        $thumbnail = $item->get_thumbnail();
+    }
+    if (empty($thumbnail)) {
+        $thumbnail = fetchPreviewImage($item->get_link());
+    }
+
     $author = '';
     if ($item->get_author()) {
         $author = cleanText($item->get_author()->get_name());
@@ -275,4 +347,3 @@ foreach ($items as $item) {
 }
 
 echo json_encode($normalized, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-?>

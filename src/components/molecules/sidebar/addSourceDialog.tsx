@@ -1,4 +1,3 @@
-import { SAMPLE_RSS_SOURCES } from "@/app/about/aboutUtils";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -345,7 +344,7 @@ const AddSourceDialog = ({
                   <div className="flex items-center justify-center gap-4 text-xs text-muted-foreground">
                     <span>
                       {
-                        SAMPLE_RSS_SOURCES.filter(
+                        samepleSource.filter(
                           (s) => !isSourceAlreadyAdded(s.url)
                         ).length
                       }{" "}
@@ -354,7 +353,7 @@ const AddSourceDialog = ({
                     <span>•</span>
                     <span>
                       {
-                        SAMPLE_RSS_SOURCES.filter((s) =>
+                        samepleSource.filter((s) =>
                           isSourceAlreadyAdded(s.url)
                         ).length
                       }{" "}

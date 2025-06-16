@@ -73,7 +73,7 @@ const router = createBrowserRouter([
 export default function Router() {
   return (
     <WorkerRegister>
-      <RouterProvider router={router} />;
+      <RouterProvider router={router} />
     </WorkerRegister>
   );
 }
