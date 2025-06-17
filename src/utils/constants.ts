@@ -15,10 +15,13 @@ export const INTERVALOPTIONS = [
 ];
 
 export const REFRESH_INTERVALS = [
+  { label: "1 hour", value: "1"},
+  { label: "3 hours", value: "3" },
   { label: "6 hours", value: "6" },
   { label: "12 hours", value: "12" },
   { label: "1 day", value: "24" },
   { label: "2 days", value: "48" },
+  { label: "3 days", value: "72" }
 ];
 
 export const TIME_SORT = [

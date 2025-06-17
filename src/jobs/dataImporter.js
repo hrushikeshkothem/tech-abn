@@ -110,7 +110,7 @@ self.onmessage = async (e) => {
     });
     let parsedData;
     try {
-      parsedData = JSON.parse(importData);
+      parsedData = typeof importData === "string" ? JSON.parse(importData) : importData;
     } catch (parseError) {
       throw new Error(`Invalid JSON format: ${parseError.message}`);
     }
@@ -119,10 +119,9 @@ self.onmessage = async (e) => {
     let sourcesImported = 0;
     let savedPostsImported = 0;
     if (parsedData.sources) {
-       const isPostsImporting = parsedData.feeds && Array.isArray(parsedData.feeds) && parsedData.feeds.length > 0
       parsedData.sources.forEach(source => {
         source.active = true
-        source.last_fetch_time = isPostsImporting ? source.last_fetch_time : null
+        source.last_fetch_time = null
       });
       sourcesImported = await importStore(db, "sources", parsedData.sources, 2, "sources");
       await delay(1000);
@@ -147,7 +146,7 @@ self.onmessage = async (e) => {
             percentage: Math.round((3 / totalStages) * 100),
             message: `⏳ Adding last sync time to sources`,
           },
-        });
+        }); 
         await addLastSyncTimeToSources(db);
         await delay(500);
       }

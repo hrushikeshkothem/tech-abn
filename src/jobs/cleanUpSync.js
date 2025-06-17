@@ -12,7 +12,7 @@ self.onmessage = async (e) => {
       },
     });
 
-    const retention_ms = 1000 * 60 * 60 * 24 * retention;
+    const retention_ms = 1000 * 60 * 60 * 24 * retention; 
     const cutoffDate = Date.now() - retention_ms;
 
     const openDB = async () =>

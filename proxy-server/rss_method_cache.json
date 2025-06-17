@@ -1,3 +1,14 @@
 {
-
+    "reactnative.dev\/blog\/rss.xml": {
+        "method": 1,
+        "timestamp": 1750064651,
+        "success_count": 11,
+        "url_sample": "https:\/\/reactnative.dev\/blog\/rss.xml"
+    },
+    "techcrunch.com\/category\/security\/feed\/": {
+        "method": 1,
+        "timestamp": 1750064850,
+        "success_count": 4,
+        "url_sample": "https:\/\/techcrunch.com\/category\/security\/feed\/"
+    }
 }

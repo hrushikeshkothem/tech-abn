@@ -53,11 +53,11 @@ const NewUserSetupDialog = ({
   const { setTheme } = useTheme();
   const { toast } = useToast();
   const [play] = useCustomSound();
-  const {samepleSource, fetchSamplesSources  } = useResourceFetcher()
+  const { samepleSource, fetchSamplesSources } = useResourceFetcher();
 
   useEffect(() => {
-    fetchSamplesSources()
-  }, [])
+    fetchSamplesSources();
+  }, []);
   const handleSourceToggle = (sourceId: string) => {
     play({ id: "hover" });
     setSelectedSources((prev) =>
@@ -152,14 +152,20 @@ const NewUserSetupDialog = ({
     }
   };
 
-  const handleConfiguration = () => {
+  const handleConfiguration = async () => {
+    await storage.setGenericItem("tabn-data-retention-period", "30");
+    await storage.setGenericItem(
+      "tabn-proxy-server",
+      "https://rss.tabn.hrushispace.com/?url="
+    );
+    await storage.setGenericItem("tabn-sync-relaxation-period", "1");
     const fileData = new FileReader();
     fileData.readAsText(importedFile as Blob);
-    fileData.onload = (event) => {
+    fileData.onload = async (event) => {
       try {
         const contents = event.target?.result as string;
         onFileUploaded(contents);
-        onClose();
+        onClose(); 
       } catch (err) {
         console.error("Invalid JSON file:", err);
       }

@@ -33,12 +33,12 @@ export default function About() {
     window.location.reload();
   };
 
-  const onFileUploaded = (contents: string) => {
+  const onFileUploaded = async (contents: string) => {
     setDialogOpen(false);
     enqueueJob({
       workerKey: "dataImporter",
       titleFinished: "Import Finished",
-      titlePending: "Importing Data",
+      titlePending: "Importing Data", 
       extraParams: {
         importData: contents,
       },
