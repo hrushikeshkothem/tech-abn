@@ -9,17 +9,17 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/hrushikeshk/tabn/actions">
-    <img alt="Build Status" src="https://img.shields.io/github/actions/workflow/status/hrushikeshk/tabn/deploy.yml?branch=main" />
+  <a href="https://github.com/hrushikeshkothem/tech-abn/">
+    <img alt="Build Status" src="https://img.shields.io/github/actions/workflow/status/hrushikeshkothem/tech-abn/deploy.yml?branch=main" />
   </a>
-  <a href="https://github.com/hrushikeshk/tabn">
+  <a href="https://github.com/hrushikeshkothem/tech-abn/">
     <img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-green.svg" />
   </a>
-  <a href="https://github.com/hrushikeshk/tabn">
-    <img alt="Stars" src="https://img.shields.io/github/stars/hrushikeshk/tabn?style=social" />
+  <a href="https://github.com/hrushikeshkothem/tech-abn/">
+    <img alt="Stars" src="https://img.shields.io/github/stars/hrushikeshkothem/tech-abn?style=social" />
   </a>
-  <a href="https://github.com/hrushikeshk/tabn/issues">
-    <img alt="Issues" src="https://img.shields.io/github/issues/hrushikeshk/tech-abn" />
+  <a href="https://github.com/hrushikeshkothem/tech-abn/">
+    <img alt="Issues" src="https://img.shields.io/github/issues/hrushikeshkothem/tech-abn" />
   </a>
   <a href="https://tabn.hrushispace.com">
     <img alt="Live Demo" src="https://img.shields.io/badge/demo-live-blue?logo=firefox-browser" />
