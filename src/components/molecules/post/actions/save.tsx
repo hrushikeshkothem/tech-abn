@@ -14,6 +14,7 @@ import { useToast } from "@/hooks/useToast";
 import { storage } from "@/storage/main";
 import IDgenerator from "@/utils/IDgen";
 import { Download, Trash2 } from "lucide-react";
+import { useState } from "react";
 
 export function SaveAction({
   saveData,
@@ -23,6 +24,7 @@ export function SaveAction({
   isSaved: boolean;
 }) {
   const { toast } = useToast();
+  const [open, setOpen] = useState(false);
   const SaveFlow = () => {
     const handleSave = async () => {
       saveData.id = IDgenerator();
@@ -32,11 +34,12 @@ export function SaveAction({
         description: "This post has been saved to your device.",
         action: <ToastAction altText="Done">Done</ToastAction>,
         duration: 1000,
-      });
+      }); 
+      setOpen(false)
     };
     return (
       <>
-        <AlertDialog>
+        <AlertDialog open={open} onOpenChange={setOpen}>
           <AlertDialogTrigger asChild>
             <Download size={24} className="cursor-pointer hover:text-primary" />
           </AlertDialogTrigger>

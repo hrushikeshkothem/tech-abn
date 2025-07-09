@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import { ToastAction } from "@/components/ui/toast";
 import { useToast } from "@/hooks/useToast";
 import { CopyIcon, Share2Icon } from "lucide-react";
+import { useState } from "react";
 
 export function ShareAction({
     href
@@ -20,8 +21,9 @@ export function ShareAction({
     href:string
 }) {
   const { toast } = useToast()
+  const [ open, setOpen ] = useState(false);
   return (
-    <AlertDialog>
+    <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
         <Share2Icon size={24} className="cursor-pointer hover:text-primary" />
       </AlertDialogTrigger>
@@ -44,6 +46,7 @@ export function ShareAction({
                 ),
                 duration: 1000
               })
+              setOpen(false)
           }} variant={"default"}>
             <CopyIcon />
           </Button>

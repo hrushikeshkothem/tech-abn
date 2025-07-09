@@ -1,6 +1,10 @@
 {
   "name": "tabn-electron",
   "private": true,
+  "workspaces": [
+    "electron",
+    "."
+  ],
   "version": "0.0.0",
   "type": "module",
   "author": "Hrushikesh Kothem",
