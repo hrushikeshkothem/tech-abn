@@ -21,7 +21,7 @@
   <a href="https://github.com/hrushikeshkothem/tech-abn/">
     <img alt="Issues" src="https://img.shields.io/github/issues/hrushikeshkothem/tech-abn" />
   </a>
-  <a href="https://tabn.hrushispace.com">
+  <a href="https://tabn.hrushispace.com" target="_blank">
     <img alt="Live Demo" src="https://img.shields.io/badge/demo-live-blue?logo=firefox-browser" />
   </a>
 </p>
