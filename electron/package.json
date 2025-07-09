@@ -1,0 +1,13 @@
+{
+  "name": "electron",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "electron dist/index.js",
+    "dev": "npm run build && npm run start",
+    "preview": "npm run build && MODE=preview npm run start"
+  },
+  "dependencies": {
+    "electron": "^30.0.0"
+  }
+}
